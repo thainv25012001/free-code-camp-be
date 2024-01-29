@@ -43,23 +43,26 @@ app.route("/").get(function (req, res) {
   res.sendFile(process.cwd() + "/views/index.html");
 });
 
-app.route("/api/:date?").get(function (req, res) {
-  const dateString = req.params.date;
-  if (!dateString)
-    return res
-      .status(200)
-      .send({ unix: Date.now(), utc: new Date().toUTCString() });
-      var dateObj;
-  if (/\d{5,}/.test(dateString)) {
-     dateObj = new Date(parseInt(dateString));
-  }else{
-    dateObj = new Date(dateString);
-  }
-  if (!isNaN(dateObj)) {
-    return res.status(200).json({ unix: dateObj.valueOf(), utc: dateObj.toUTCString() });
-  } else {
-    return res.status(400).json({ error: "Invalid Date" });
-  }
+// app.route("/api/:date?").get(function (req, res) {
+//   const dateString = req.params.date;
+//   if (!dateString)
+//     return res
+//       .status(200)
+//       .send({ unix: Date.now(), utc: new Date().toUTCString() });
+//       var dateObj;
+//   if (/\d{5,}/.test(dateString)) {
+//      dateObj = new Date(parseInt(dateString));
+//   }else{
+//     dateObj = new Date(dateString);
+//   }
+//   if (!isNaN(dateObj)) {
+//     return res.status(200).json({ unix: dateObj.valueOf(), utc: dateObj.toUTCString() });
+//   } else {
+//     return res.status(400).json({ error: "Invalid Date" });
+//   }
+// });
+app.route("/api/whoami").get(function (req, res) {
+  return res.json({ipaddress : "14.248.82.197" , language : "Vietnamese" , software : "web"})  
 });
 
 // Respond not found to all the wrong routes
