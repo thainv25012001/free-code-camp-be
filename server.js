@@ -39,14 +39,15 @@ app.route('/')
 		  res.sendFile(process.cwd() + '/views/index.html');
     })
 
-app.route('/api/:date')
+app.route('/api/:date?')
       .get(function(req, res) {
       const {date} = req.params;
+      if(!date) return res.status(200).send({unix: Date.now(), utc : new Date().toUTCString() }) 
       var dateObj = new Date(parseInt(date));
       if(!isNaN(dateObj)){
-        res.status(200).json({unix:date, utc : dateObj.toUTCString() })
+        return res.status(200).json({unix:date, utc : dateObj.toUTCString() })
       }else{
-        res.status(400).json({error : 'Invalid date'})
+        return res.status(400).json({error : 'Invalid Date'})
       }
     })
 
