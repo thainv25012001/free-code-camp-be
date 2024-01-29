@@ -7,6 +7,7 @@
 
 var fs = require('fs');
 var express = require('express');
+const { timeStamp } = require('console');
 var app = express();
 
 if (!process.env.DISABLE_XORIGIN) {
@@ -36,6 +37,17 @@ app.route('/_api/package.json')
 app.route('/')
     .get(function(req, res) {
 		  res.sendFile(process.cwd() + '/views/index.html');
+    })
+
+app.route('/api/:date')
+      .get(function(req, res) {
+      const {date} = req.params;
+      var dateObj = new Date(parseInt(date));
+      if(!isNaN(dateObj)){
+        res.status(200).json({unix:date, utc : dateObj.toUTCString() })
+      }else{
+        res.status(400).json({error : 'Invalid date'})
+      }
     })
 
 // Respond not found to all the wrong routes
