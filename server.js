@@ -10,6 +10,8 @@ var express = require("express");
 const { timeStamp } = require("console");
 var app = express();
 
+app.use(express.json());
+
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function (req, res, next) {
     var allowedOrigins = [
@@ -61,8 +63,35 @@ app.route("/").get(function (req, res) {
 //     return res.status(400).json({ error: "Invalid Date" });
 //   }
 // });
-app.route("/api/whoami").get(function (req, res) {
-  return res.json({ipaddress : "14.248.82.197" , language : "Vietnamese" , software : "web"})  
+
+// app.route("/api/whoami").get(function (req, res) {
+//   return res.json({ipaddress : "14.248.82.197" , language : "Vietnamese" , software : "web"})
+// });
+
+const shorturlMap = {};
+var index = 1;
+
+app.get("/api/shorturl/:short_url", (req, res) => {
+  const shortUrl = req.params.short_url;
+  res.redirect(shorturlMap[shortUrl])
+});
+app.post("/api/shorturl", (req, res) => {
+  const urlRegex = /^(http|https):\/\/www\..*\.(com|org)$/;
+
+  if (!req.body || !req.body.original_url) {
+    return res.status(400).json({ error: "Invalid request body" });
+  }
+
+  const { original_url } = req.body;
+
+  if (!urlRegex.test(original_url)) {
+    return res.status(400).json({ error: "invalid url" });
+  }
+
+  shorturlMap[index] = original_url;
+  index++;
+
+  res.json({ original_url: original_url, short_url: index - 1 });
 });
 
 // Respond not found to all the wrong routes
