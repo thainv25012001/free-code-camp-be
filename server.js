@@ -7,8 +7,9 @@
 
 var fs = require("fs");
 var express = require("express");
-const { timeStamp } = require("console");
 var app = express();
+const bodyParser = require('body-parser');
+const dns = require('dns');
 
 app.use(express.json());
 
@@ -157,8 +158,8 @@ app.post('/api/shorturl', (req,res) => {
     }
     else {
       //If url is valid -> generate short url
-      short = gen_shorturl();
-      dict = {original_url : input, short_url : short};
+      let short = gen_shorturl();
+      let dict = {original_url : input, short_url : short};
       dataManagement("save data", dict);
       return res.json(dict);
     }
