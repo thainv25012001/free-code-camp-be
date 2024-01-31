@@ -274,7 +274,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
   try {
     const exercises = getExercises();
     const exercise = {
-      username : user.username,
+      username: user.username,
       description,
       duration,
       date: date ? new Date(date) : new Date(),
@@ -287,7 +287,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
     fs.writeFileSync(filePath, data, "utf8");
 
     console.log(`File is written successfully!`);
-    return res.json(exercises);
+    return res.json(exercise);
   } catch (err) {
     console.log(`Error writing file: ${err}`);
     return res.status(500).json({ error: "Error while try to write file" });
@@ -301,12 +301,17 @@ app.get("/api/users/:_id/logs", (req, res) => {
     return res.status(404).json({ error: "User not found" });
   }
   const exercises = getExercises();
-  const logs = exercises.map((exercise) => {
-    if (exercise._id == _id) {
-      return {description : exercise.description , date : exercise.date , duration : exercise.duration};
-    }
-  });
-  res.json({...user ,count : logs.length, logs});
+  const logs = exercises
+    .filter((exercise) => exercise._id == _id)
+    .foreach(
+      (exercise) =>
+        (exercise = {
+          description: exercise.description,
+          date: exercise.date,
+          duration: parseInt(exercise.duration),
+        })
+    );
+  res.json({ ...user, count: logs.length, logs });
 });
 
 // Respond not found to all the wrong routes
