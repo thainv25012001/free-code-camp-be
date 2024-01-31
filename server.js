@@ -145,8 +145,7 @@ app.post('/api/shorturl', (req,res) => {
   
   //matches a string with regular expr => return array
   //url should contains : http:// or https://
-let urlRegex = /^(http|https):\/\/www\..*\.(com|org).*/;
-
+  let urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*(\?[^\s]*)?$/i;
   if(urlRegex.test(input)){
     //search a string with regular expr, and replace the string -> delete https://
     // param = input.replace(/^https?:\/\//i, "");
