@@ -301,16 +301,15 @@ app.get("/api/users/:_id/logs", (req, res) => {
     return res.status(404).json({ error: "User not found" });
   }
   const exercises = getExercises();
-  const logs = exercises
-    .filter((exercise) => exercise._id == _id)
-    .foreach(
-      (exercise) =>
-        (exercise = {
-          description: exercise.description,
-          date: exercise.date,
-          duration: parseInt(exercise.duration),
-        })
-    );
+  const userExercises = exercises.filter((exercise) => exercise._id == _id);
+  const logs = userExercises.map(
+    (exercise) =>
+      (exercise = {
+        description: exercise.description,
+        date: exercise.date,
+        duration: parseInt(exercise.duration),
+      })
+  );
   res.json({ ...user, count: logs.length, logs });
 });
 
