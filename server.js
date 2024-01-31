@@ -147,7 +147,7 @@ app.post('/api/shorturl', (req,res) => {
   //url should contains : http:// or https://
   if((/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/igm).test(input)){
     //search a string with regular expr, and replace the string -> delete https://
-    param = input.replace(/^https?:\/\//i, "");
+    // param = input.replace(/^https?:\/\//i, "");
     //Validate the url
     dns.lookup(param, (err, url_Ip) => {
       if (err) {
