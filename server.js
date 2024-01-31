@@ -154,7 +154,7 @@ app.post('/api/shorturl', (req,res) => {
       if (err) {
         //If url is not valid -> respond error
         console.log(url_Ip);
-        return res.json({ error: 'invalid url' });
+        return res.json({ error: 'invalid url dns' });
       }
       else {
         //If url is valid -> generate short url
