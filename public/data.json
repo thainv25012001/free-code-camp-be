@@ -182,5 +182,9 @@
   {
     "original_url": "https://example.org/",
     "short_url": 30767
+  },
+  {
+    "original_url": "https://www.freecodecamp.com",
+    "short_url": 16112
   }
 ]

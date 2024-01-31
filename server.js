@@ -145,25 +145,29 @@ app.post('/api/shorturl', (req,res) => {
   
   //matches a string with regular expr => return array
   //url should contains : http:// or https://
-  domain = input.match(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/igm);
-  //search a string with regular expr, and replace the string -> delete https://
-  param = domain[0].replace(/^https?:\/\//i, "");
+  if((/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)/igm).test(input)){
+    //search a string with regular expr, and replace the string -> delete https://
+    param = input.replace(/^https?:\/\//i, "");
+    //Validate the url
+    dns.lookup(param, (err, url_Ip) => {
+      if (err) {
+        //If url is not valid -> respond error
+        console.log(url_Ip);
+        return res.json({ error: 'invalid url' });
+      }
+      else {
+        //If url is valid -> generate short url
+        let short = gen_shorturl();
+        let dict = {original_url : input, short_url : short};
+        dataManagement("save data", dict);
+        return res.json(dict);
+      }
+    });
+    
+  }else{
+    return res.json({ error: 'invalid url' });
+  }
 
-  //Validate the url
-  dns.lookup(param, (err, url_Ip) => {
-    if (err) {
-      //If url is not valid -> respond error
-      console.log(url_Ip);
-      return res.json({ error: 'invalid url' });
-    }
-    else {
-      //If url is valid -> generate short url
-      let short = gen_shorturl();
-      let dict = {original_url : input, short_url : short};
-      dataManagement("save data", dict);
-      return res.json(dict);
-    }
-  });
 });
 
 //4.middleware to handle existing short url
