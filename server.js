@@ -276,7 +276,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
     const exercise = {
       username: user.username,
       description,
-      duration: parseInt(user.duration),
+      duration: parseInt(duration),
       date: date ? new Date(date).toDateString() : new Date().toDateString(),
       _id,
     };
@@ -314,16 +314,16 @@ app.get("/api/users/:_id/logs", (req, res) => {
     }
     
   });
-  const log = userExercises.map(
+  let log = userExercises.map(
     (exercise) =>
       (exercise = {
         description: exercise.description,
-        date: new Date(exercise.date),
+        date: new Date(exercise.date).toDateString(),
         duration: parseInt(exercise.duration),
       })
   );
   if (limit) {
-    log.splice(0,limit);
+    log = log.slice(0,limit);
   }
   res.json({ ...user, count: log.length, log });
 });

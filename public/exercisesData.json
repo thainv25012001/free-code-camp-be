@@ -26,5 +26,19 @@
         "duration": 60,
         "date": "Mon Jan 01 1990",
         "_id": "b54b"
+    },
+    {
+        "username": "thai nguyen",
+        "description": "test",
+        "duration": null,
+        "date": "Mon Jan 01 1990",
+        "_id": "b54b"
+    },
+    {
+        "username": "thai nguyen",
+        "description": "test",
+        "duration": 60,
+        "date": "Mon Jan 01 1990",
+        "_id": "b54b"
     }
 ]
