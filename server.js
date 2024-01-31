@@ -341,7 +341,7 @@ app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
     error.httpStatusCode = 400;
     return next(error);
   }
-  res.json({name : file.filename , type : file.mimetype , size : file.size});
+  res.json({name : file.originalname , type : file.mimetype , size : file.size});
 });
 // Respond not found to all the wrong routes
 app.use(function (req, res, next) {
