@@ -186,5 +186,21 @@
   {
     "original_url": "https://www.freecodecamp.com",
     "short_url": 16112
+  },
+  {
+    "original_url": "https://www.freecodecamp321.com",
+    "short_url": 467
+  },
+  {
+    "original_url": "https://.freecodecamp321.com",
+    "short_url": 40625
+  },
+  {
+    "original_url": "htps://.freecodecamp321.com",
+    "short_url": 10371
+  },
+  {
+    "original_url": "https://www.freecodecamp321.com/?v=123",
+    "short_url": 30229
   }
 ]
