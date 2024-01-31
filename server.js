@@ -277,7 +277,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
       username: user.username,
       description,
       duration,
-      date: date ? new Date(date) : new Date(),
+      date: date ? new Date(date).toDateString() : new Date().toDateString(),
       _id,
     };
     exercises.push(exercise);
@@ -302,7 +302,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
   }
   const exercises = getExercises();
   const userExercises = exercises.filter((exercise) => exercise._id == _id);
-  const logs = userExercises.map(
+  const log = userExercises.map(
     (exercise) =>
       (exercise = {
         description: exercise.description,
@@ -310,7 +310,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
         duration: parseInt(exercise.duration),
       })
   );
-  res.json({ ...user, count: logs.length, logs });
+  res.json({ ...user, count: log.length, log });
 });
 
 // Respond not found to all the wrong routes

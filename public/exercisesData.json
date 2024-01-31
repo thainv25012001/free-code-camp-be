@@ -5,5 +5,12 @@
         "duration": 60,
         "date": "1990-01-01T00:00:00.000Z",
         "_id": "b54b"
+    },
+    {
+        "username": "thai nguyen",
+        "description": "test",
+        "duration": 60,
+        "date": "Mon Jan 01 1990",
+        "_id": "b54b"
     }
 ]
