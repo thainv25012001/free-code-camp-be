@@ -7,6 +7,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const dns = require("dns");
+const upload = require("./upload");
+
 
 app.use(express.json());
 
@@ -194,140 +196,153 @@ app.route("/").get(function (req, res) {
 //   }
 // });
 
-const getUsers = () => {
-  try {
-    let filePath = "./public/usersData.json";
-    const data = fs.readFileSync(filePath, "utf8");
+///exercises-user management
 
-    // parse JSON string to JSON object
-    const databases = JSON.parse(data);
-    if (!Array.isArray(databases)) {
-      return [];
-    }
-    return databases;
-  } catch (err) {
-    console.log(`Error reading file from disk: ${err}`);
-    return res.status(500).json({ error: err });
+// const getUsers = () => {
+//   try {
+//     let filePath = "./public/usersData.json";
+//     const data = fs.readFileSync(filePath, "utf8");
+
+//     // parse JSON string to JSON object
+//     const databases = JSON.parse(data);
+//     if (!Array.isArray(databases)) {
+//       return [];
+//     }
+//     return databases;
+//   } catch (err) {
+//     console.log(`Error reading file from disk: ${err}`);
+//     return res.status(500).json({ error: err });
+//   }
+// };
+// const getExercises = () => {
+//   try {
+//     let filePath = "./public/exercisesData.json";
+//     const data = fs.readFileSync(filePath, "utf8");
+
+//     // parse JSON string to JSON object
+//     const databases = JSON.parse(data);
+//     if (!Array.isArray(databases)) {
+//       return [];
+//     }
+//     return databases;
+//   } catch (err) {
+//     console.log(`Error reading file from disk: ${err}`);
+//     return res.status(500).json({ error: err });
+//   }
+// };
+
+// app.post("/api/users", (req, res) => {
+//   let filePath = "./public/usersData.json";
+//   let _id = Math.floor((1 + Math.random()) * 0x10000)
+//     .toString(16)
+//     .substring(1);
+//   const username = req.body.username;
+//   const user = { _id, username };
+//   const users = getUsers();
+//   users.push(user);
+//   try {
+//     // convert JSON object to a string
+//     const data = JSON.stringify(users, null, 4);
+
+//     // write file to disk
+//     fs.writeFileSync(filePath, data, "utf8");
+
+//     console.log(`File is written successfully!`);
+//     return res.json(user);
+//   } catch (err) {
+//     console.log(`Error writing file: ${err}`);
+//     return res.status(500).json({ error: "err while write file" });
+//   }
+// });
+
+// app.get("/api/users", (req, res) => {
+//   const users = getUsers();
+//   res.json(users);
+// });
+
+// const getUserWithId = (_id) => {
+//   const users = getUsers();
+//   const user = users.find((user) => user._id == _id);
+//   return user;
+// };
+
+// app.post("/api/users/:_id/exercises", (req, res) => {
+//   const { description, duration, date } = req.body;
+//   const { _id } = req.params;
+//   const user = getUserWithId(_id);
+//   if (!user) {
+//     return res.status(404).json({ error: "User not found" });
+//   }
+//   let filePath = "./public/exercisesData.json";
+
+//   try {
+//     const exercises = getExercises();
+//     const exercise = {
+//       username: user.username,
+//       description,
+//       duration: parseInt(duration),
+//       date: date ? new Date(date).toDateString() : new Date().toDateString(),
+//       _id,
+//     };
+//     exercises.push(exercise);
+//     // convert JSON object to a string
+//     const data = JSON.stringify(exercises, null, 4);
+//     // write file to disk
+//     fs.writeFileSync(filePath, data, "utf8");
+
+//     console.log(`File is written successfully!`);
+//     return res.json(exercise);
+//   } catch (err) {
+//     console.log(`Error writing file: ${err}`);
+//     return res.status(500).json({ error: "Error while try to write file" });
+//   }
+// });
+
+// app.get("/api/users/:_id/logs", (req, res) => {
+//   const { _id } = req.params;
+//   const { from, to, limit } = req.query;
+//   const user = getUserWithId(_id);
+//   if (!user) {
+//     return res.status(404).json({ error: "User not found" });
+//   }
+//   const exercises = getExercises();
+//   const userExercises = exercises.filter((exercise) => {
+//     if (from && to) {
+//       return (
+//         exercise._id == _id &&
+//         new Date(exercise.date) >= new Date(from) &&
+//         new Date(exercise.date) <= new Date(to)
+//       );
+//     }else {
+//       return exercise._id == _id;
+//     }
+
+//   });
+//   let log = userExercises.map(
+//     (exercise) =>
+//       (exercise = {
+//         description: exercise.description,
+//         date: new Date(exercise.date).toDateString(),
+//         duration: parseInt(exercise.duration),
+//       })
+//   );
+//   if (limit) {
+//     log = log.slice(0,limit);
+//   }
+//   res.json({ ...user, count: log.length, log });
+// });
+
+///last task
+
+app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
+  const file = req.file;
+  if (!file) {
+    const error = new Error("Please upload a file");
+    error.httpStatusCode = 400;
+    return next(error);
   }
-};
-const getExercises = () => {
-  try {
-    let filePath = "./public/exercisesData.json";
-    const data = fs.readFileSync(filePath, "utf8");
-
-    // parse JSON string to JSON object
-    const databases = JSON.parse(data);
-    if (!Array.isArray(databases)) {
-      return [];
-    }
-    return databases;
-  } catch (err) {
-    console.log(`Error reading file from disk: ${err}`);
-    return res.status(500).json({ error: err });
-  }
-};
-
-app.post("/api/users", (req, res) => {
-  let filePath = "./public/usersData.json";
-  let _id = Math.floor((1 + Math.random()) * 0x10000)
-    .toString(16)
-    .substring(1);
-  const username = req.body.username;
-  const user = { _id, username };
-  const users = getUsers();
-  users.push(user);
-  try {
-    // convert JSON object to a string
-    const data = JSON.stringify(users, null, 4);
-
-    // write file to disk
-    fs.writeFileSync(filePath, data, "utf8");
-
-    console.log(`File is written successfully!`);
-    return res.json(user);
-  } catch (err) {
-    console.log(`Error writing file: ${err}`);
-    return res.status(500).json({ error: "err while write file" });
-  }
+  res.send({name : file.filename , type : file.mimetype , size : file.size});
 });
-
-app.get("/api/users", (req, res) => {
-  const users = getUsers();
-  res.json(users);
-});
-
-const getUserWithId = (_id) => {
-  const users = getUsers();
-  const user = users.find((user) => user._id == _id);
-  return user;
-};
-
-app.post("/api/users/:_id/exercises", (req, res) => {
-  const { description, duration, date } = req.body;
-  const { _id } = req.params;
-  const user = getUserWithId(_id);
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
-  }
-  let filePath = "./public/exercisesData.json";
-
-  try {
-    const exercises = getExercises();
-    const exercise = {
-      username: user.username,
-      description,
-      duration: parseInt(duration),
-      date: date ? new Date(date).toDateString() : new Date().toDateString(),
-      _id,
-    };
-    exercises.push(exercise);
-    // convert JSON object to a string
-    const data = JSON.stringify(exercises, null, 4);
-    // write file to disk
-    fs.writeFileSync(filePath, data, "utf8");
-
-    console.log(`File is written successfully!`);
-    return res.json(exercise);
-  } catch (err) {
-    console.log(`Error writing file: ${err}`);
-    return res.status(500).json({ error: "Error while try to write file" });
-  }
-});
-
-app.get("/api/users/:_id/logs", (req, res) => {
-  const { _id } = req.params;
-  const { from, to, limit } = req.query;
-  const user = getUserWithId(_id);
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
-  }
-  const exercises = getExercises();
-  const userExercises = exercises.filter((exercise) => {
-    if (from && to) {
-      return (
-        exercise._id == _id &&
-        new Date(exercise.date) >= new Date(from) &&
-        new Date(exercise.date) <= new Date(to)
-      );
-    }else {
-      return exercise._id == _id;
-    }
-    
-  });
-  let log = userExercises.map(
-    (exercise) =>
-      (exercise = {
-        description: exercise.description,
-        date: new Date(exercise.date).toDateString(),
-        duration: parseInt(exercise.duration),
-      })
-  );
-  if (limit) {
-    log = log.slice(0,limit);
-  }
-  res.json({ ...user, count: log.length, log });
-});
-
 // Respond not found to all the wrong routes
 app.use(function (req, res, next) {
   res.status(404);
