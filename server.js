@@ -247,7 +247,7 @@ app.post("/api/users", (req, res) => {
     return res.json(user);
   } catch (err) {
     console.log(`Error writing file: ${err}`);
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "err while write file" });
   }
 });
 
@@ -258,7 +258,7 @@ app.get("/api/users", (req, res) => {
 
 const getUserWithId = (_id) => {
   const users = getUsers();
-  const user = users.find((user) => user._id === _id);
+  const user = users.find((user) => user._id == _id);
   return user;
 };
 
@@ -274,7 +274,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
   try {
     const exercises = getExercises();
     const exercise = {
-      username,
+      username : user.username,
       description,
       duration,
       date: date ? new Date(date) : new Date(),
@@ -290,7 +290,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
     return res.json(exercises);
   } catch (err) {
     console.log(`Error writing file: ${err}`);
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Error while try to write file" });
   }
 });
 
